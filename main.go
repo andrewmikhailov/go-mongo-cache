@@ -13,7 +13,8 @@ type Cache struct {
 }
 
 const (
-	NotFound = "not found"
+	NotFound  = "not found"
+	Duplicate = "E11000 duplicate"
 )
 
 var (
@@ -61,8 +62,11 @@ func Set(key, value string) {
 	err = collection.Insert(&Cache{key, value})
 
 	if err != nil {
-		CloseSession()
-		log.Fatal(err)
+		errorString := err.Error()
+		if errorString[:len(Duplicate)] != Duplicate {
+			CloseSession()
+			log.Fatal(err)
+		}
 	}
 }
 
