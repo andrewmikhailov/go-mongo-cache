@@ -31,13 +31,6 @@ func Initialize(commectionString, collectionName string) {
 	}
 
 	collection = session.DB(collectionName).C("cache")
-
-	index := mgo.Index{
-		Key:    []string{"Key"},
-		Unique: true,
-	}
-	err := collection.EnsureIndex(index)
-
 	if err != nil {
 		CloseSession()
 		panic(err)
