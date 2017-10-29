@@ -12,6 +12,10 @@ type Cache struct {
 	Value string
 }
 
+const (
+	NotFound = "not found"
+)
+
 var (
 	session    *mgo.Session
 	collection *mgo.Collection
@@ -43,8 +47,11 @@ func Get(key string) Cache {
 	result := Cache{}
 	err = collection.Find(bson.M{"key": key}).One(&result)
 	if err != nil {
-		CloseSession()
-		log.Fatal(err)
+		errorString := err.Error()
+		if errorString != NotFound {
+			CloseSession()
+			log.Fatal(err)
+		}
 	}
 
 	return result
