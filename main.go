@@ -1,4 +1,4 @@
-package main
+package go_mongo_cache
 
 import (
 	"log"
