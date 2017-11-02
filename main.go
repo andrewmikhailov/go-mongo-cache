@@ -1,8 +1,6 @@
 package go_mongo_cache
 
 import (
-	"log"
-
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -23,44 +21,42 @@ var (
 	err        error
 )
 
-func Initialize(commectionString, collectionName string) {
+func Initialize(commectionString, collectionName string) (*mgo.Collection, error) {
 	session, err = mgo.Dial(commectionString)
 	if err != nil {
 		CloseSession()
-		panic(err)
+		return collection, err
 	}
 
 	collection = session.DB(collectionName).C("cache")
-	if err != nil {
-		CloseSession()
-		panic(err)
-	}
+	return collection, nil
 }
 
-func Get(key string) Cache {
+func Get(key string) (Cache, error) {
 	result := Cache{}
 	err = collection.Find(bson.M{"key": key}).One(&result)
 	if err != nil {
 		errorString := err.Error()
 		if errorString != NotFound {
 			CloseSession()
-			log.Fatal(err)
+			return result, err
 		}
 	}
 
-	return result
+	return result, nil
 }
 
-func Set(key, value string) {
+func Set(key, value string) error {
 	err = collection.Insert(&Cache{key, value})
 
 	if err != nil {
 		errorString := err.Error()
 		if errorString[:len(Duplicate)] != Duplicate {
 			CloseSession()
-			log.Fatal(err)
+			return err
 		}
 	}
+	return nil
 }
 
 func CloseSession() {
