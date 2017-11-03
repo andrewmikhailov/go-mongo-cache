@@ -21,14 +21,14 @@ var (
 	err        error
 )
 
-func Initialize(commectionString, collectionName string) (*mgo.Collection, error) {
-	session, err = mgo.Dial(commectionString)
+func Initialize(connectionString, DBName, collectionName string) (*mgo.Collection, error) {
+	session, err = mgo.Dial(connectionString)
 	if err != nil {
 		CloseSession()
 		return collection, err
 	}
 
-	collection = session.DB(collectionName).C("cache")
+	collection = session.DB(DBName).C(collectionName)
 	return collection, nil
 }
 
