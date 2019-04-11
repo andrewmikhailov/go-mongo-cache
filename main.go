@@ -1,4 +1,4 @@
-package mongo_cache
+package go_mongo_cache
 
 import (
 	"gopkg.in/mgo.v2"
