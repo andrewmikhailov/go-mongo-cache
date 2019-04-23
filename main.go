@@ -24,7 +24,7 @@ var (
 func Initialize(connectionString, DBName, collectionName string) (*mgo.Collection, error) {
 	session, err = mgo.Dial(connectionString)
 	if err != nil {
-		CloseSession()
+		// CloseSession()
 		return collection, err
 	}
 
